@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function delCheck(){
+            if(confirm('해당글을 삭제하시겠습니까?')){
+                location.href='/del?no=<%=result[0].no%>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>글내용보기</h1>
+    <ul>
+        <li>번호 : <%=result[0].no%></li>
+        <li>작성자 : <%=result[0].userid%></li>
+        <li>조회수 : <%=result[0].hit%></li>
+        <li>등록일 : <%=result[0].writedate%></li>
+        <li>제목 : <%=result[0].subject%></li>
+        <li>글내용<br/> <%=result[0].content%></li>
+    </ul>
+    <div>
+        <% if(logCheck=="Y"){ %>
+            수정
+            삭제
+        <% } %>
+    </div>
+</body>
+</html>

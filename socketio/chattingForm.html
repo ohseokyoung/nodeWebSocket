@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- 채팅을 하기 위한 라이브러리 -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket;
+        $(function(){
+            //1. 채팅하는 서버에 접속하기
+            socket = io.connect();
+
+            //2. 클라이언트가 서버에게 문자 보내기 : 이벤트 발생시킴
+            //          이벤트종류, 보낼메세지
+            socket.emit('hello', '안녕!!! client가 보낸 문자입니다.');
+
+            //3. 서버에서 보낸 문자를 받을 이벤트 구현
+            socket.on('hi', function(msg){
+                $("#chatMsg").append("<div>"+msg+"</div>");
+            });
+
+            //4. 채팅하기
+            //client가 입력한 메시지를 이용하여 hello이벤트 발생시키기
+            function sendMessage(){
+                if($("#msg").val()!=""){ //입력한메시지가 있으면
+                    socket.emit('hello', $("#msg").val());//이벤트 발생시키기 emit
+                }
+                $("#msg").val("");
+                $("msg").focus();  //값비우고 포커스
+            }
+            $("#send").click(function(){
+                sendMessage();
+            });
+            $("#msg").keyup(function(){
+                //enter키를 누른 경우만 메시지 전송
+                if(event.keyCode==13) // 13 10
+                sendMessage();
+            });
+        });
+        
+    </script>
+</head>
+<body>
+    <h1>채팅하기</h1>
+    message : <input type="text" id="msg"/>
+    <input type="button" id="send" value="보내기"/>
+    <hr/>
+    <!-- 대화 내용 표시하는곳 -->
+    <div id="chatMsg" style="width:600px; background-color: #ddd;"></div>
+</body>
+</html>

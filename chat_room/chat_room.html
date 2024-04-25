@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket;
+        $(function(){
+            //방만들기 : chatting서버에 접속
+            function createRoom(){
+                if($("#roomName").val()==""){//방이름이 있는지
+                    alert("방이름을 입력 후 방만들기를 하세요."); 
+                    $("roomName").focus();
+                    return false;
+                }
+                //방만들기 숨기고(js로작성..ㅎ)
+                document.getElementById("roomDiv").style.display ="none"; //$("#roomDiv").css('display', 'none');
+                //채팅방은 보여주고
+                document.getElementById("chat").style.display="block";
+                
+                //채팅서버연결
+                socket = io.connect();
+
+                //방생성 이벤트 발생 emit('이벤트', '문자', '인코딩')
+                socket.emit('join', $("#roomName").val(), 'utf-8');
+                //입력한 방이름 초기화
+                $("#roomName").val('');
+
+                //서버에서 보낸 문자를 받을 이벤트
+                socket.on('response', function(receiveMsg){
+                    $("#chatView").append("<div>" +receiveMsg+ "</div>");
+                });
+            }
+            $("#createRoom").click(function(){
+               createRoom();
+            });
+            $("#roomName").keyup(function(){
+                if(event.keyCode==13){
+                    createRoom();
+                }
+            });
+            // --- 클라이언트가 서버로 문자 보내기
+            function sendMessage(){
+                //메시지 입력유무 확인
+                if($("#msg").val()==""){
+                    alert("메시지를 입력하세요...");
+                    $("#msg").focus();
+                    return false;
+                }
+                //서버보내기(sendMessage이벤트 발생)
+                socket.emit('sendMessage', $("#msg").val(), 'utf-8');
+
+                //입력값 초기화
+                $("#msg").val("");
+                $("#msg").focus();
+            }
+            $("#msg").keyup(function(){
+                if(event.keyCode==13){
+                    sendMessage();
+                }
+            });
+            $("#sendMsg").click(function(){
+                sendMessage();
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <h1>단체 채팅하기</h1>
+    <div id="roomDiv">
+        <h1>방만들기</h1>
+        방이름 : <input type="text" name="roomName" id="roomName"/>
+        <input type="button" value="방만들기" id="createRoom"/>
+    </div>
+    <hr/>
+    <div id="chat" style="display:none">
+        <div id="sendMessage">
+            <h1>Chatting</h1>
+            메시지 : <input type="text" name="msg" id="msg"/>
+            <input type="button" value="보내기" id="sendMsg"/>
+        </div>
+        <hr/>
+        <h1>채팅내용보기</h1>
+        <div id="chatView" style="background-color: beige;"></div>
+     
+    </div>
+</body>
+</html>

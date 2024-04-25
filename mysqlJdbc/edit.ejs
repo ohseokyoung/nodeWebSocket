@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>글 수정 폼</h1>
+    <form method="post" action="/editOk">
+        <input type="hidden" name="no" value="<%=record[0].no"/>
+        제목 : <input type="text" name="subject" value="<%=record[0].subject"/><br/>
+        글내용 : <textarea name="content" cols="50" rows="10"><%=record[0].content%></textarea><br/>
+        <input type="submit" value="수정"/>
+    </form>
+</body>
+</html>

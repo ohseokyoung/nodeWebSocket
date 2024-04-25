@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bList{
+            padding:0; margin:0; list-style-type: none; overflow: auto;
+        }
+        .bList>li{
+            float:left; width:10%; height:40px; line-height:40px; border-bottom: 1px solid gray;
+        }
+        .bList>li:nth-child(5n+2){
+            width:60%;
+        }
+    </style>
+</head>
+<body>
+    <h1>게시판목록</h1>
+    <div><a href="/write">글쓰기</a></div>
+    <div>총레코드수 : <%=totalRecord%>, 현재페이지 : <%=pageNum%></div>
+    <ul class="bList">
+        <li>번호</li>
+        <li>제목</li>
+        <li>글쓴이</li>
+        <li>조회수</li>
+        <li>등록일</li>
+
+        <% for (var idx=0; idx<records.length; idx++){%>
+            <li><%=records[idx].no%></li>
+            <li><a href="/view?no=<%=records[idx].no%>"><%=records[idx].subject%></a></li>
+            <li><%=records[idx].username%></li>
+            <li><%=records[idx].hit%></li>
+            <li><%=records[idx].writedate%></li>
+        <%}%>
+    </ul>
+    <div>
+        수정
+    </div>
+</body>
+</html>
